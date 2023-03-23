@@ -1,27 +1,25 @@
-package hello.advanced.app.v2;
+package hello.advanced.app.v3;
 
 import hello.advanced.app.trace.TraceId;
 import hello.advanced.app.trace.TraceStatus;
 import hello.advanced.app.trace.hellotrace.HelloTraceV2;
+import hello.advanced.app.trace.logtrace.LogTrace;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-@Repository
+@Service
 @RequiredArgsConstructor
-public class OrderRepositoryV2 {
+public class OrderServiceV3 {
 
-    private final HelloTraceV2 trace;
-    public void save(TraceId traceId, String itemId) {
+    private final OrderRepositoryV3 orderRepository;
+    private final LogTrace trace;
+
+    public void orderItem(String itemId) {
 
         TraceStatus status=null;
         try {
-            status = trace.beginSync(traceId,"OrderRepositoryV1.save()");
-            //저장 로직
-            if (itemId.equals("ex")) {
-                //ex면 예외를 터트리는 로직  // 저장을 못하고 예외가 터져서 던져진다.
-                throw new IllegalStateException("예외 발생!");
-            }
-            sleep(1000);
+            status = trace.begin("OrderService.orderItem()");
+            orderRepository.save(itemId);
             trace.end(status);
         }catch(Exception e){
             trace.exception(status,e);
@@ -31,13 +29,5 @@ public class OrderRepositoryV2 {
             //예외를 꼭 다시 던져줘야한다. 이걸 안해주면 정상흐름으로 된다.
         }
 
-    }
-
-    private void sleep(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

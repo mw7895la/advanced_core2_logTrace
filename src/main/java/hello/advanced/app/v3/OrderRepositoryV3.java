@@ -1,21 +1,23 @@
-package hello.advanced.app.v2;
+package hello.advanced.app.v3;
 
 import hello.advanced.app.trace.TraceId;
 import hello.advanced.app.trace.TraceStatus;
 import hello.advanced.app.trace.hellotrace.HelloTraceV2;
+import hello.advanced.app.trace.logtrace.LogTrace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class OrderRepositoryV2 {
+public class OrderRepositoryV3 {
 
-    private final HelloTraceV2 trace;
-    public void save(TraceId traceId, String itemId) {
+    private final LogTrace trace;
+
+    public void save(String itemId) {
 
         TraceStatus status=null;
         try {
-            status = trace.beginSync(traceId,"OrderRepositoryV1.save()");
+            status = trace.begin("OrderRepositoryV1.save()");
             //저장 로직
             if (itemId.equals("ex")) {
                 //ex면 예외를 터트리는 로직  // 저장을 못하고 예외가 터져서 던져진다.
