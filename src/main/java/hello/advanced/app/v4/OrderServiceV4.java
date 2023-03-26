@@ -27,7 +27,6 @@ public class OrderServiceV4 {
                 return null;
             }
         };
-        //@RestController니까 JSON 형식으로 ok를 리턴
         template.execute("OrderService.orderItem()");
 
     }
